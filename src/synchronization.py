@@ -20,7 +20,7 @@ def synchronize(ibase_df, work_report_df):
         ascending=False
     )
 
-    work_report_df = work_report_df.drop_na(
+    work_report_df = work_report_df.dropna(
         subset=["equipmentId"]
     )
 
@@ -71,7 +71,7 @@ def synchronize(ibase_df, work_report_df):
             continue
 
         # Locations differ
-        descrepancies += 1
+        discrepancies += 1
 
         try:
             sap_client.update_ibase_location(

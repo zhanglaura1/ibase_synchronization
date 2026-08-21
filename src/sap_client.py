@@ -10,7 +10,7 @@ class SAPClient:
 
     def _get(self, endpoint, params=None):
         response = requests.get(
-            f"{self.base_rul}/{endpoint}",
+            f"{self.base_url}/{endpoint}",
             headers={
                 "APIKey": self.api_key,
                 "Accept": "application/json",
@@ -35,7 +35,7 @@ class SAPClient:
         data = self._get(
             'sapassetintelligencenetwork/workorders',
             params={
-                "$select": "equipmentId,location"
+                "$select": "equipmentId,location,lastChangeDateTime"
             }
         )
         return pd.DataFrame(data)
