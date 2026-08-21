@@ -1,5 +1,6 @@
 import requests, os
 import pandas as pd
+from datetime import datetime
 
 class SAPClient:
 
@@ -17,6 +18,10 @@ class SAPClient:
             },
             params=params
         )
+
+        response.raise_for_status()
+        return response.json()
+
     def get_ibase_records(self):
         data = self._get(
             'sap/c4c/odata/v1/c4codataapi/InstalledBaseCollection',
@@ -30,11 +35,29 @@ class SAPClient:
         data = self._get(
             'sapassetintelligencenetwork/workorders',
             params={
-                "$select": "equipmentId, location"
+                "$select": "equipmentId,location"
             }
         )
         return pd.DataFrame(data)
 
-    def update_ibase_location(self):
-        # also update LastChangedOn
-        pass
+    def update_ibase_location(self, ObjectID, location):
+        endpoint = (
+            f"sap/c4c/odata/v1/c4codataapi/InstalledBaseCollection"
+            f"('\''{ObjectID}'\'')"
+        )
+
+        response = requests.patch(
+            f"{self.base_url}/{endpoint}",
+            headers={
+                "APIKey": self.api_key,
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "DataServiceVersion": '2.0'
+            },
+            data={
+                "AddressLine1": location,
+                "LastChangedOn": datetime.now()
+            }
+        )
+
+        response.raise_for_status()
