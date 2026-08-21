@@ -5,7 +5,7 @@ def normalize(loc):
         return None
     return str(loc).strip().lower()
 
-def synchronize(ibase_df, work_report_df):
+def synchronize(ibase_df, work_report_df, sap_client):
     ibase_lookup = ibase_df.set_index("ObjectID")
 
     matches = 0

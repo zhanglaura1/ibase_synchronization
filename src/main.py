@@ -5,22 +5,24 @@ import audit
 def main():
 
     print("Starting equipment synchronization...\n")
+    client = sap_client.SAPClient()
 
     print("Pulling iBase records from SAP...")
-    ibase_df = sap_client.get_ibase_records()
+    ibase_df = client.get_ibase_records()
     print(f"Pulled {len(ibase_df)} iBase records.\n")
 
     print("Pulling work reports from SAP...")
-    work_report_df = sap_client.get_work_reports()
+    work_report_df = client.get_work_reports()
     print(f"Pulled {len(work_report_df)} work reports.\n")
 
     print("Synchronizing equipment locations...\n")
     results = synchronization.synchronize(
         ibase_df,
-        work_report_df
+        work_report_df,
+        client
     )
 
-    audit.write_report(results["audit_records"])
+    audit.write_audit_report(results["audit_records"])
     # Display results
     print("Synchronization complete.\n")
     print(f"Records processed:  {results['processed']}")

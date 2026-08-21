@@ -1,6 +1,8 @@
 import requests, os
 import pandas as pd
-from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class SAPClient:
 
@@ -29,7 +31,7 @@ class SAPClient:
                 "$select": "ObjectID,AddressLine1"
             }
         )
-        return pd.DataFrame(data["results"])
+        return pd.DataFrame(data["d"]["results"])
 
     def get_work_reports(self):
         data = self._get(
@@ -54,9 +56,8 @@ class SAPClient:
                 "Content-Type": "application/json",
                 "DataServiceVersion": '2.0'
             },
-            data={
-                "AddressLine1": location,
-                "LastChangedOn": datetime.now()
+            json={
+                "AddressLine1": location
             }
         )
 
